@@ -14,6 +14,16 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/studentadministrationdb?serverTimezone=GMT&allowMultiQueries=true
+    url: jdbc:mysql://127.0.0.1:3306/test?serverTimezone=GMT&allowMultiQueries=true
+    #url: jdbc:mysql://atopa.top:1104/test?serverTimezone=GMT&allowMultiQueries=true
     username: root
     password: 123456
+
+mybatis-plus:
+  global-config: # 假删除
+    db-config:
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml #扫描所有mybatis文件
