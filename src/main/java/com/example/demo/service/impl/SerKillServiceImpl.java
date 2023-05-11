@@ -1,9 +1,12 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.service.SecKillService;
+import org.apache.ibatis.transaction.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -27,6 +30,9 @@ public class SerKillServiceImpl implements SecKillService {
         // 3.2 秒杀成功用户key
         String userKey = "sk:"+pid+":user";
 
+
+        // 监视库存
+        redisTemplate.watch(kcKey);
         // 4 获取库存 如果库存null 秒杀还没开始
         String kc = redisTemplate.opsForValue().get(kcKey);
         if(kc == null){
@@ -47,12 +53,22 @@ public class SerKillServiceImpl implements SecKillService {
             return false;
         }
 
+
         // 7 秒杀过程
+        redisTemplate.multi();
         // 7.1 秒杀库存-1
         redisTemplate.opsForValue().decrement(kcKey);
 
         // 7.2 秒杀成功用户添加到清单
         redisTemplate.opsForSet().add(userKey,uid);
+
+        List<Object> results = redisTemplate.exec();
+
+        if(results == null || results.size() == 0){
+            System.out.println("秒杀失败");
+            return false;
+        }
+
         System.out.println("秒杀成功！");
 
 
