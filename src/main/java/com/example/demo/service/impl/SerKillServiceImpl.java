@@ -54,7 +54,7 @@ public class SerKillServiceImpl implements SecKillService {
         // 7.2 秒杀成功用户添加到清单
         redisTemplate.opsForSet().add(userKey,uid);
         System.out.println("秒杀成功！");
-        
+
 
         return true;
     }
