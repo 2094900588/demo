@@ -35,17 +35,26 @@ public class SerKillServiceImpl implements SecKillService {
         }
 
 
-
-
         // 5 判断用户是否重复秒杀
+        if(Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(userKey, uid))){
+            System.out.println("已经秒杀成功了，不能重复秒杀");
+            return false;
+        }
 
         // 6 判断如果商品数量，库存数量小于1，秒杀结束
+        if(Integer.parseInt(kc) <= 0){
+            System.out.println("秒杀已经结束");
+            return false;
+        }
 
         // 7 秒杀过程
         // 7.1 秒杀库存-1
+        redisTemplate.opsForValue().decrement(kcKey);
+
         // 7.2 秒杀成功用户添加到清单
-
-
+        redisTemplate.opsForSet().add(userKey,uid);
+        System.out.println("秒杀成功！");
+        
 
         return true;
     }
