@@ -60,8 +60,6 @@ public class RedisConfig extends CachingConfigurerSupport {
         RedisCacheManager cacheManager = RedisCacheManager.builder(factory).cacheDefaults(config).build();
         return cacheManager;
 
-
-
     }
 
 
